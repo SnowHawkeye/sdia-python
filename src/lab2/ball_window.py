@@ -12,16 +12,17 @@ class BallWindow:
             radius (float): float representing the radius
         """
         center = np.array(center)
-        # * simplys use assert len(center) or raise exception
-        assert len(center) >= 1
+        # * simply use assert len(center) or raise exception
+        # >> simply checks that the array is not empty
+        assert len(center)
 
         self.center = center
         # ? why taking abs(), radius must be positive
+        # >> in case the given radius is negative (other possibility: assert radius > 0)
         self.radius = float(abs(radius))
 
     def __str__(self):
-        # ! not implemented
-        pass
+        return "BallWindow: (" + str(self.center) + ", " + str(self.radius) + ")"
 
     def __len__(self):
         """Returns the dimension of the ball
@@ -44,6 +45,7 @@ class BallWindow:
         assert self.dimension() == point.size
 
         # * exploit numpy vectorize point - self.center
+        # ? to ask in class
         difference = np.subtract(point, self.center)
         return np.linalg.norm(difference) <= self.radius
 
@@ -62,6 +64,7 @@ class BallWindow:
             float : volume of the ball
         """
         # * nice, consider using scipy.special
+        # >> scipy.special: library of functions
         n = self.dimension()
         R = self.radius
         if n % 2 == 0:  # formula in case dimension is even
@@ -71,9 +74,19 @@ class BallWindow:
             product = np.product(odds)
             return 2 ** ((n + 1) / 2) * np.pi ** ((n - 1) / 2) * R ** n / product
 
-    def indicator_function(self, point):
-        # todo handle multiple points
-        return point in self
+    def indicator_function(self, points):
+        """Returns true if all points are in the ball.
+
+        Args:
+            points (np.array): Array of points to test
+
+        Returns:
+            bool: True if all points are in the box.
+        """
+        for point in points:
+            if point not in self:
+                return False
+        return True
 
     def rand(self, n=1, rng=None):
         """Generates n points in the ball.
@@ -90,6 +103,7 @@ class BallWindow:
 
         # * exploit numpy vectorization power to avoid looping
         # ? are you sure vector is indeed uniformly distributed
+        # ? to ask in class
         for _ in range(n):
             # a random direction is chosen from a random vector
             direction = rng.random(self.dimension())

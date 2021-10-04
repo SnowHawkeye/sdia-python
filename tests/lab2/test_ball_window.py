@@ -37,10 +37,10 @@ def ball_2d():
 @pytest.mark.parametrize(
     "point, expected",
     [
-        (np.array([0, 0]), True),
-        (np.array([2.5, 2.5]), True),
-        (np.array([0, 30]), False),
-        (np.array([-6, 9]), False),
+        (np.array([[0, 0]]), True),
+        (np.array([[0, 0], [2.5, 2.5]]), True),
+        (np.array([[0, 30]]), False),
+        (np.array([[0, 0], [-6, 9]]), False),
     ],
 )
 def test_indicator_function2D(ball_2d, point, expected):
@@ -56,9 +56,9 @@ def ball_1d():
 @pytest.mark.parametrize(
     "point, expected",
     [
-        (6, True),
-        (4.5, True),
-        (1, False),
+        (np.array([[6]]), True),
+        (np.array([[4.5], [6]]), True),
+        (np.array([[1], [6]]), False),
     ],
 )
 def test_indicator_function1D(ball_1d, point, expected):
@@ -68,9 +68,7 @@ def test_indicator_function1D(ball_1d, point, expected):
 
 @pytest.mark.parametrize(
     "n, rng, expected",
-    [
-        (1, 0, np.array([[0.18864415955389333, 0.0799007050028547]])),
-    ],
+    [(1, 0, np.array([[0.18864415955389333, 0.0799007050028547]])),],
 )
 def test_random_points_generation(n, rng, expected):
     box = BallWindow(center=np.array([0, 0]), radius=5)
@@ -89,3 +87,14 @@ def test_random_points_generation(n, rng, expected):
 )
 def test_volume(center, radius, expected):
     assert BallWindow(center, radius).volume() == expected
+
+
+@pytest.mark.parametrize(
+    "center, radius, expected",
+    [
+        (np.array([2.5, 2.5]), 5, "BallWindow: ([2.5 2.5], 5.0)"),
+        (np.array([0, 5, 2]), 3, "BallWindow: ([0 5 2], 3.0)"),
+    ],
+)
+def test_ball_string_representation(center, radius, expected):
+    assert str(BallWindow(center, radius)) == expected

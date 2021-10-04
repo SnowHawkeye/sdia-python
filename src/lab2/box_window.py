@@ -15,22 +15,20 @@ class BoxWindow:
 
         bounds = np.array(bounds)
         # * if np.array worked, this means that all "segments" have the same len
-        # * consider using bounds.shape
-        for segment in bounds:
-            assert len(segment) == 2
+        if not bounds.shape[1] == 2:
+            raise TypeError("Not a segment")
         self.bounds = bounds
 
     def __str__(self):
         r"""BoxWindow: :math:`[a_1, b_1] \times [a_2, b_2] \times \cdots`
 
         Returns:
-            String: = string returned when doing print(BoxWindow(...))
-        # ! str: not String
+            str: = string returned when doing print(BoxWindow(...))
         """
 
         string = ""
         for i, segment in enumerate(self.bounds):
-            string += printSegment(segment)
+            string += print_segment(segment)
             if i != (len(self.bounds) - 1):
                 string += " x "
         result = "BoxWindow: " + string
@@ -48,21 +46,14 @@ class BoxWindow:
         """Returns True if a point is in the box.
 
         Args:
-            point (numpy.array): point to test
-        # ? consistency numpy.array or np.array
+            point (np.array): point to test
 
         Returns:
-            Boolean: if the point is in the box
-         # ! bool: not Boolean
+            bool: if the point is in the box
         """
-        assert len(point) == len(self)
-
-        for i, coord in enumerate(point):
-            if not pointIsInSegment(coord, self.bounds[i]):
-                return False
-        return True
-        # ? "better" implementation: why not using it
-        # return all(a <= x <= b for(a, b), x in zip(self.bounds, point))
+        if len(point) != len(self):
+            raise ValueError("Wrong dimension of point")
+        return all(a <= x <= b for (a, b), x in zip(self.bounds, point))
 
     def dimension(self):
         """Returns the dimension of the box.
@@ -86,17 +77,19 @@ class BoxWindow:
 
         return volume
 
-    def indicator_function(self, point):
-        """Returns true if a point is in the box.
-        # ? how would you handle multiple points
+    def indicator_function(self, points):
+        """Returns true if all points are in the ball.
 
         Args:
-            point (numpy.array): point to test
+            points (np.array): Array of points to test
 
         Returns:
-            Boolean: if the point is in the box
+            bool: True if all points are in the box.
         """
-        return point in self
+        for point in points:
+            if point not in self:
+                return False
+        return True
 
     def rand(self, n=1, rng=None):
         """Generate ``n`` points uniformly at random inside the :py:class:`BoxWindow`.
@@ -120,8 +113,7 @@ class BoxWindow:
 
 
 # * interesting helper functions
-# ! use snake case print_segment
-def printSegment(array):
+def print_segment(array):
     """Prints a segment using the format [float, float]
 
     Args:
@@ -130,8 +122,7 @@ def printSegment(array):
     Returns:
         string: the segment printed in the correct format
     """
-    # ! use f-strings
-    return "[" + str(float(array[0])) + ", " + str(float(array[1])) + "]"
+    return f"[{str(float(array[0]))}, {str(float(array[1]))}]"
 
 
 def segmentLength(segment):
