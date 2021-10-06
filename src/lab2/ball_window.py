@@ -12,17 +12,14 @@ class BallWindow:
             radius (float): float representing the radius
         """
         center = np.array(center)
-        # * simply use assert len(center) or raise exception
-        # >> simply checks that the array is not empty
         assert len(center)
+        assert radius >= 0
 
         self.center = center
-        # ? why taking abs(), radius must be positive
-        # >> in case the given radius is negative (other possibility: assert radius > 0)
-        self.radius = float(abs(radius))
+        self.radius = float(radius)
 
     def __str__(self):
-        return "BallWindow: (" + str(self.center) + ", " + str(self.radius) + ")"
+        return f"BallWindow: ({str(self.center)}, {str(self.radius)})"
 
     def __len__(self):
         """Returns the dimension of the ball
@@ -44,10 +41,7 @@ class BallWindow:
         point = np.array(point)
         assert self.dimension() == point.size
 
-        # * exploit numpy vectorize point - self.center
-        # ? to ask in class
-        difference = np.subtract(point, self.center)
-        return np.linalg.norm(difference) <= self.radius
+        return np.linalg.norm(point - self.center) <= self.radius
 
     def dimension(self):
         """Returns the dimension of the ball
@@ -63,8 +57,6 @@ class BallWindow:
         Returns:
             float : volume of the ball
         """
-        # * nice, consider using scipy.special
-        # >> scipy.special: library of functions
         n = self.dimension()
         R = self.radius
         if n % 2 == 0:  # formula in case dimension is even
@@ -83,10 +75,7 @@ class BallWindow:
         Returns:
             bool: True if all points are in the box.
         """
-        for point in points:
-            if point not in self:
-                return False
-        return True
+        return np.all([point in self for point in points])
 
     def rand(self, n=1, rng=None):
         """Generates n points in the ball.
@@ -99,19 +88,16 @@ class BallWindow:
             numpy.array: array containing the n generated points
         """
         rng = get_random_number_generator(rng)
-        point_list = []
 
-        # * exploit numpy vectorization power to avoid looping
-        # ? are you sure vector is indeed uniformly distributed
-        # ? to ask in class
-        for _ in range(n):
-            # a random direction is chosen from a random vector
-            direction = rng.random(self.dimension())
-            # a random distance from the center is chosen
-            distance = rng.uniform(0, self.radius)
-            # a vector of norm inferior to the radius is found by normalizing the random vector, and multiplying it by the random distance
-            vector = np.multiply(direction, distance / np.linalg.norm(direction))
-            # the chosen point is obtained by adding the center to the vector
-            point_list.append(np.add(vector, self.center))
-
-        return np.array(point_list)
+        directions = rng.uniform(size=(n, self.dimension()))
+        directions = np.array(
+            [direction / np.linalg.norm(direction) for direction in directions]
+        )
+        distances = rng.uniform(0, self.radius, n)
+        vectors = np.array(
+            [
+                direction * distance
+                for (direction, distance) in zip(directions, distances)
+            ]
+        )
+        return np.array([vector + self.center for vector in vectors])

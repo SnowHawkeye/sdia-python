@@ -9,6 +9,11 @@ def test_raises_exception_when_initializing_with_wrong_center():
         BallWindow(center=np.array([]), radius=5)
 
 
+def test_raises_exception_when_initializing_with_wrong_radius():
+    with pytest.raises(AssertionError):
+        BallWindow(center=np.array([1, 1]), radius=-3)
+
+
 @pytest.mark.parametrize(
     "center, radius, expected",
     [
@@ -67,14 +72,31 @@ def test_indicator_function1D(ball_1d, point, expected):
 
 
 @pytest.mark.parametrize(
-    "n, rng, expected",
-    [(1, 0, np.array([[0.18864415955389333, 0.0799007050028547]])),],
+    "center, radius, n",
+    [
+        (np.array([3, 6]), 5, 5),
+        (np.array([0, 5, 8]), 3, 10),
+        (np.array([0.5, 1.5, 3.5, 7]), 10, 15),
+    ],
 )
-def test_random_points_generation(n, rng, expected):
-    box = BallWindow(center=np.array([0, 0]), radius=5)
-    point = box.rand(n, rng)
-    a = np.array_equal(point, expected)
-    assert a
+def test_random_points_generation_dimension(center, radius, n):
+    ball = BallWindow(center, radius)
+    points = ball.rand(n)
+    assert points.shape == (n, len(ball))
+
+
+@pytest.mark.parametrize(
+    "center, radius, n",
+    [
+        (np.array([3, 6]), 5, 5),
+        (np.array([0, 5, 8]), 3, 10),
+        (np.array([0.5, 1.5, 3.5, 7]), 10, 15),
+    ],
+)
+def test_random_points_generation_contained(center, radius, n):
+    ball = BallWindow(center, radius)
+    points = ball.rand(n)
+    assert np.all([point in ball for point in points])
 
 
 @pytest.mark.parametrize(

@@ -101,15 +101,6 @@ def test_raises_exception_when_initializing_with_wrong_shape():
 
 
 @pytest.mark.parametrize(
-    "n, rng, expected", [(1, 0, np.array([[3.1848084366072715, 1.3489335688193516]])),],
-)
-def test_random_points_generation(n, rng, expected):
-    box = BoxWindow(np.array([[0, 5], [0, 5]]))
-    point = box.rand(n, rng)
-    np.testing.assert_array_equal(point, expected)
-
-
-@pytest.mark.parametrize(
     "bounds, n",
     [
         (np.array([[3, 6]]), 5),
