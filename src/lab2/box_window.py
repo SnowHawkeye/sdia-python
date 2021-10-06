@@ -7,16 +7,19 @@ class BoxWindow:
     """Represents a box in any dimension, defined by a number of segments."""
 
     def __init__(self, bounds):
-        """Initializes the bounds with the np.array given as a parameter
+        """Initializes the bounds with the np.array given as a parameter. Bounds must be given as arrays of [a, b] with a <= b.
 
         Args:
             bounds (np.array): array that contains the bound for each dimension
         """
 
         bounds = np.array(bounds)
-        # * if np.array worked, this means that all "segments" have the same len
         if not bounds.shape[1] == 2:
             raise TypeError("Not a segment")
+
+        if not np.all([segment[1] - segment[0] >= 0 for segment in bounds]):
+            raise TypeError("Segment bounds are not in the right order")
+
         self.bounds = bounds
 
     def __str__(self):
@@ -26,6 +29,9 @@ class BoxWindow:
             str: = string returned when doing print(BoxWindow(...))
         """
 
+        print_segment = (
+            lambda segment: f"[{str(float(segment[0]))}, {str(float(segment[1]))}]"
+        )
         string = ""
         for i, segment in enumerate(self.bounds):
             string += print_segment(segment)
@@ -70,10 +76,8 @@ class BoxWindow:
             int: volume of the box.
         """
 
-        # * exploit numpy, use - or np.diff and np.prod
         volume = 0 if len(self) == 0 else 1
-        for segment in self.bounds:
-            volume *= segmentLength(segment)
+        volume = np.prod(np.diff(self.bounds, axis=1))
 
         return volume
 
@@ -86,10 +90,8 @@ class BoxWindow:
         Returns:
             bool: True if all points are in the box.
         """
-        for point in points:
-            if point not in self:
-                return False
-        return True
+
+        return np.all([point in self for point in points])
 
     def rand(self, n=1, rng=None):
         """Generate ``n`` points uniformly at random inside the :py:class:`BoxWindow`.
@@ -102,53 +104,10 @@ class BoxWindow:
             numpy.array: array containing all the generated points
         """
         rng = get_random_number_generator(rng)
-        point_list = []
-        # * exploit numpy, rng.uniform(a, b, size=n)
-        for _ in range(n):  # * nice using "_"
-            point = []
-            for segment in self.bounds:
-                point.append(rng.uniform(segment[0], segment[1]))
-            point_list.append(np.array(point))
-        return np.array(point_list)
-
-
-# * interesting helper functions
-def print_segment(array):
-    """Prints a segment using the format [float, float]
-
-    Args:
-        array (numpy.array): array representing the segment
-
-    Returns:
-        string: the segment printed in the correct format
-    """
-    return f"[{str(float(array[0]))}, {str(float(array[1]))}]"
-
-
-def segmentLength(segment):
-    """Returns the length of a segment
-
-    Args:
-        segment (numpy.array): array representing the segment
-
-    Returns:
-        float: length of the segment
-    """
-    return segment[1] - segment[0]
-
-
-def pointIsInSegment(point, segment):
-    """Tells whether a point is contained in a segment
-
-    Args:
-        point (float): point to test
-        segment (numpy.array): array representing the segment
-
-    Returns:
-        boolean: if the point is in the segment
-    """
-    a, b = segment
-    return a <= point and point <= b
+        values = np.array(
+            [rng.uniform(segment[0], segment[1], n) for segment in self.bounds]
+        )
+        return values.T
 
 
 class UnitBoxWindow(BoxWindow):

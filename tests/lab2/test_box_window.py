@@ -90,7 +90,12 @@ def test_raises_exception_when_point_of_wrong_dimension():
         np.array([0, 0, 3]) in BoxWindow(np.array([[0, 5], [0, 5]]))
 
 
-def test_raises_exception_when_initializing_with_wrong_array():
+def test_raises_exception_when_initializing_with_wrong_segment_bounds():
+    with pytest.raises(TypeError):
+        BoxWindow(np.array([[5, 2], [0, 5]]))
+
+
+def test_raises_exception_when_initializing_with_wrong_shape():
     with pytest.raises(TypeError):
         BoxWindow(np.array([[0, 5, 2], [0, 5, 3]]))
 
