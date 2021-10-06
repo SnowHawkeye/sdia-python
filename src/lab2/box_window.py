@@ -94,7 +94,7 @@ class BoxWindow:
         return np.all([point in self for point in points])
 
     def rand(self, n=1, rng=None):
-        """Generate ``n`` points uniformly at random inside the :py:class:`BoxWindow`.
+        """Generates ``n`` points uniformly at random inside the :py:class:`BoxWindow`.
 
         Args:
             n (int, optional): [description]. Defaults to 1.
@@ -111,13 +111,21 @@ class BoxWindow:
 
 
 class UnitBoxWindow(BoxWindow):
-    # ! not implemented
-    # ! not tested
     def __init__(self, center, dimension):
-        """[summary]
+        """Represents a box in any dimension, where all segments defining the box are of length 1, centered on  ``center`` .
 
         Args:
-            dimension ([type]): [description]
-            center ([type], optional): [description]. Defaults to None.
+            dimension (int): [description] Dimension of the box
+            center (numpy.array, optional): Center of the segments. Defaults to None.
         """
+
+        if center is None:
+            center = np.zeros(dimension)
+        else:
+            assert len(center) == dimension
+
+        segments = np.array([[-0.5, 0.5] for _ in range(dimension)])
+        bounds = np.array(
+            [segment + center[index] for index, segment in enumerate(segments)]
+        )
         super(UnitBoxWindow, self).__init__(bounds)

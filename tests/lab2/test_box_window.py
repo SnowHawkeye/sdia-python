@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from lab2.box_window import BoxWindow
+from lab2.box_window import BoxWindow, UnitBoxWindow
 
 
 def test_raise_type_error_when_something_is_called():
@@ -112,3 +112,24 @@ def test_random_points_generation_dimension(bounds, n):
     box = BoxWindow(bounds)
     points = box.rand(n)
     assert points.shape == (n, len(box))
+
+
+# ================================
+# ======== UNIT BOX TESTS ========
+# ================================
+
+
+def test_raises_exception_when_center_of_wrong_dimension():
+    with pytest.raises(AssertionError):
+        UnitBoxWindow(np.array([1, 1]), 1)
+
+
+@pytest.mark.parametrize(
+    "center, dimension, expected",
+    [
+        (None, 2, "BoxWindow: [-0.5, 0.5] x [-0.5, 0.5]"),
+        (np.array([1, 2]), 2, "BoxWindow: [0.5, 1.5] x [1.5, 2.5]"),
+    ],
+)
+def test_unit_box_initialization(center, dimension, expected):
+    assert str(UnitBoxWindow(center, dimension)) == expected
