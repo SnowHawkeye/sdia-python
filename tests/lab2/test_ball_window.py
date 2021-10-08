@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from lab2.ball_window import BallWindow
+from sdia_python.lab2.ball_window import BallWindow
 
 
 def test_raises_exception_when_initializing_with_wrong_center():

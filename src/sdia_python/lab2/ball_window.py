@@ -1,11 +1,14 @@
 import numpy as np
 
-from lab2.utils import get_random_number_generator
+from sdia_python.lab2.utils import get_random_number_generator
 
 
 class BallWindow:
+    """Represents a ball in any dimension, defined by a center and a radius"""
+
     def __init__(self, center, radius):
-        """Represents a ball in any dimension, defined by a center and a radius
+        """
+        Initializes a ball with a center and a radius. The radius must be positive.
 
         Args:
             center (numpy.array): coordinates of the center point

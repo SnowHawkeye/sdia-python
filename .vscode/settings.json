@@ -72,7 +72,7 @@
         "editor.quickSuggestions": true,
     },
     // RestructuredText
-    "restructuredtext.confPath": "${workspaceFolder}/docs",
+    "restructuredtext.confPath": "${workspaceFolder}\\docs",
     "restructuredtext.languageServer.disabled": true,
     // TOML
     "[toml]": {
@@ -87,4 +87,5 @@
     "python.testing.unittestEnabled": false,
     // "python.testing.nosetestsEnabled": false,
     "python.testing.pytestEnabled": true,
+    "restructuredtext.linter.disabled": true,
 }
