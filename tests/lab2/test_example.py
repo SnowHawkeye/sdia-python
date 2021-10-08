@@ -25,3 +25,9 @@ def test_simple_addition():
 )
 def test_multiple_addition(x, y, expected):
     assert addition(x, y) == expected
+
+
+def test_raise_type_error_when_something_is_called():
+    with pytest.raises(TypeError):
+        # call_something_that_raises_TypeError()
+        raise TypeError()
