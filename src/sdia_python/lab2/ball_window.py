@@ -4,15 +4,14 @@ from sdia_python.lab2.utils import get_random_number_generator
 
 
 class BallWindow:
-    """Represents a ball in any dimension, defined by a center and a radius"""
+    """Represents a ball in any dimension, defined by a center and a radius."""
 
     def __init__(self, center, radius):
-        """
-        Initializes a ball with a center and a radius. The radius must be positive.
+        """Initializes a ball with a center and a radius. The radius must be positive.
 
         Args:
-            center (numpy.array): coordinates of the center point
-            radius (float): float representing the radius
+            center (numpy.array): Coordinates of the center point.
+            radius (float): Float representing the radius.
         """
         center = np.array(center)
         assert len(center)
@@ -25,21 +24,21 @@ class BallWindow:
         return f"BallWindow: ({str(self.center)}, {str(self.radius)})"
 
     def __len__(self):
-        """Returns the dimension of the ball
+        """Returns the dimension of the ball.
 
         Returns:
-            int : dimension of the ball
+            int : Dimension of the ball.
         """
         return len(self.center)
 
     def __contains__(self, point):
-        """Tells whether a point is contained in the ball
+        """Returns ``true`` if the given `point` is contained in the ball.
 
         Args:
-            point (numpy.array): the point to test
+            point (numpy.array): The point to test.
 
         Returns:
-            boolean: if it is contained in the ball
+            boolean: True if ``point`` is contained in this ``BallWindow``.
         """
         point = np.array(point)
         assert self.dimension() == point.size
@@ -47,18 +46,18 @@ class BallWindow:
         return np.linalg.norm(point - self.center) <= self.radius
 
     def dimension(self):
-        """Returns the dimension of the ball
+        """Returns the dimension of the ball.
 
         Returns:
-            int : dimension of the ball
+            int : Dimension of the ball.
         """
         return len(self)
 
     def volume(self):
-        """Returns the volume of the ball. The formula for the volume of an n-ball is used : https://fr.wikipedia.org/wiki/N-sph%C3%A8re
+        """Returns the volume of the ball. The formula for the volume of an n-ball is used : https://fr.wikipedia.org/wiki/N-sph%C3%A8re.
 
         Returns:
-            float : volume of the ball
+            float : Volume of the ball.
         """
         n = self.dimension()
         R = self.radius
@@ -70,10 +69,10 @@ class BallWindow:
             return 2 ** ((n + 1) / 2) * np.pi ** ((n - 1) / 2) * R ** n / product
 
     def indicator_function(self, points):
-        """Returns true if all points are in the ball.
+        """Returns ``true`` if all points are in the ball.
 
         Args:
-            points (np.array): Array of points to test
+            points (np.array): Array of points to test.
 
         Returns:
             bool: True if all points are in the box.
@@ -88,7 +87,7 @@ class BallWindow:
             rng (int, optional): Random seed. Defaults to None.
 
         Returns:
-            numpy.array: array containing the n generated points
+            numpy.array: Array containing the ``n`` generated points.
         """
         rng = get_random_number_generator(rng)
 

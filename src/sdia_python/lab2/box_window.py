@@ -10,7 +10,7 @@ class BoxWindow:
         """Initializes the bounds with the np.array given as a parameter. Bounds must be given as arrays of [a, b] with a <= b.
 
         Args:
-            bounds (np.array): array that contains the bound for each dimension
+            bounds (np.array): Array containing the bounds for each dimension.
         """
 
         bounds = np.array(bounds)
@@ -26,7 +26,7 @@ class BoxWindow:
         r"""BoxWindow: :math:`[a_1, b_1] \times [a_2, b_2] \times \cdots`
 
         Returns:
-            str: = string returned when doing print(BoxWindow(...))
+            str: = Same string returned as when calling print(BoxWindow(...)).
         """
 
         print_segment = (
@@ -44,7 +44,7 @@ class BoxWindow:
         """Returns the dimension of the box.
 
         Returns:
-            int: dimension of the box
+            int: Dimension of the box.
         """
         return len(self.bounds)
 
@@ -52,10 +52,10 @@ class BoxWindow:
         """Returns True if a point is in the box.
 
         Args:
-            point (np.array): point to test
+            point (np.array): The point to test.
 
         Returns:
-            bool: if the point is in the box
+            bool: True if ``point`` is contained in this `BoxWindow`.
         """
         if len(point) != len(self):
             raise ValueError("Wrong dimension of point")
@@ -65,7 +65,7 @@ class BoxWindow:
         """Returns the dimension of the box.
 
         Returns:
-            int: dimension of the box
+            int: Dimension of the box.
         """
         return len(self)
 
@@ -73,7 +73,7 @@ class BoxWindow:
         """Returns the volume of the box.
 
         Returns:
-            int: volume of the box.
+            int: Volume of the box.
         """
 
         volume = 0 if len(self) == 0 else 1
@@ -82,10 +82,10 @@ class BoxWindow:
         return volume
 
     def indicator_function(self, points):
-        """Returns true if all points are in the ball.
+        """Returns ``true`` if all points are in the box.
 
         Args:
-            points (np.array): Array of points to test
+            points (np.array): Array of points to test.
 
         Returns:
             bool: True if all points are in the box.
