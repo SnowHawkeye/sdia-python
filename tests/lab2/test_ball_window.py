@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from sdia_python.lab2.ball_window import BallWindow
+from sdia_python.lab2.ball_window import BallWindow, UnitBallWindow
 
 
 def test_raises_exception_when_initializing_with_wrong_center():
@@ -120,3 +120,19 @@ def test_volume(center, radius, expected):
 )
 def test_ball_string_representation(center, radius, expected):
     assert str(BallWindow(center, radius)) == expected
+
+
+@pytest.mark.parametrize(
+    "center, dimension, expected",
+    [
+        (np.array([2.5, 2.5]), 2, "BallWindow: ([2.5 2.5], 1.0)"),
+        (None, 3, "BallWindow: ([0. 0. 0.], 1.0)"),
+    ],
+)
+def test_unit_ball_initialization(center, dimension, expected):
+    assert str(UnitBallWindow(center, dimension)) == expected
+
+
+def test_unit_ball_initialization_raises_exception_when_mismatched_dimensions():
+        with pytest.raises(AssertionError):
+            UnitBallWindow(center=np.array([1, 1]), dimension=3)

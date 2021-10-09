@@ -115,7 +115,7 @@ class UnitBoxWindow(BoxWindow):
         """Represents a box in any dimension, where all segments defining the box are of length 1, centered on  ``center`` .
 
         Args:
-            dimension (int): [description] Dimension of the box
+            dimension (int): [description] Dimension of the box.
             center (numpy.array, optional): Center of the segments. Defaults to None.
         """
 

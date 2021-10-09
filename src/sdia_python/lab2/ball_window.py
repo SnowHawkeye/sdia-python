@@ -103,3 +103,19 @@ class BallWindow:
             ]
         )
         return np.array([vector + self.center for vector in vectors])
+
+
+class UnitBallWindow(BallWindow):
+    def __init__(self, center, dimension):
+        """Represents a ball in any dimension, of radius 1, of center  ``center`` .
+
+        Args:
+            dimension (int): [description] Dimension of the ball.
+            center (numpy.array, optional): Center of the ball. Defaults to None.
+        """
+
+        if center is None:
+            center = np.zeros(dimension)
+        else:
+            assert len(center) == dimension
+        super(UnitBallWindow, self).__init__(center, 1)
