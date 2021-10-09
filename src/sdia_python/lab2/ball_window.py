@@ -64,7 +64,7 @@ class BallWindow:
         if n % 2 == 0:  # formula in case dimension is even
             return (((np.pi) ** (n / 2)) * R ** n) / np.math.factorial(n / 2)
         else:  # formula in case dimension is odd
-            odds = [i for i in range(1, n + 1, 2)]
+            odds = np.arange(1, n + 1, 2)
             product = np.product(odds)
             return 2 ** ((n + 1) / 2) * np.pi ** ((n - 1) / 2) * R ** n / product
 
@@ -103,7 +103,7 @@ class BallWindow:
                 for (direction, distance) in zip(directions, distances)
             ]
         )
-        return np.array([vector + self.center for vector in vectors])
+        return vectors + self.center
 
 
 class UnitBallWindow(BallWindow):

@@ -124,8 +124,6 @@ class UnitBoxWindow(BoxWindow):
         else:
             assert len(center) == dimension
 
-        segments = np.array([[-0.5, 0.5] for _ in range(dimension)])
-        bounds = np.array(
-            [segment + center[index] for index, segment in enumerate(segments)]
-        )
+        segments = np.full(shape=(2, dimension), fill_value=[-0.5, 0.5])
+        bounds = (segments.T + center).T
         super(UnitBoxWindow, self).__init__(bounds)
