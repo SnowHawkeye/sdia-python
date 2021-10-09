@@ -95,10 +95,11 @@ class BallWindow:
         directions = np.array(
             [direction / np.linalg.norm(direction) for direction in directions]
         )
-        distances = rng.uniform(0, self.radius, n)
+        # for the direction to follow a uniform distribution, it is the square root of the radius that must be uniformly distributed
+        distances = rng.uniform(0, np.sqrt(self.radius), n)
         vectors = np.array(
             [
-                direction * distance
+                direction * distance ** 2
                 for (direction, distance) in zip(directions, distances)
             ]
         )
